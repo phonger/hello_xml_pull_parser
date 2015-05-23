@@ -22,6 +22,7 @@ import org.apache.http.entity.StringEntity;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         if (id == R.id.action_go) {
-            handleLoopjPostXml();
+            handleXmlPullEmployee();
             return true;
         }
 
@@ -209,17 +210,29 @@ public class MainActivity extends Activity {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 String s = new String(bytes);
-                Log.i(TAG, "onSuccess06. s: \n"+s);
+                Log.i(TAG, "onSuccess06. s: \n" + s);
             }
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Log.i(TAG, "onFailure. throwable: "+throwable);
+                Log.i(TAG, "onFailure. throwable: " + throwable);
             }
         });
 
     }
 
 
+    public void handleXmlPullEmployee(){
+        Log.i(TAG, "inside handleXmlPullEmployee");
 
+        List<Employee> employees = null;
+        try {
+            XMLPullParserHandler parser = new XMLPullParserHandler();
+            employees = parser.parse(getAssets().open("employees.xml"));
+            Log.i(TAG, "employees.size(): "+employees.size());
+        } catch (IOException e) {
+            Log.e(TAG, e.toString(), e);
+
+        }
+    }
 }
